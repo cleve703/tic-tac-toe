@@ -1,0 +1,23 @@
+body {
+  background-color: lightgoldenrodyellow;
+}
+
+.board-container {
+  margin: 10vh 25%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 25vh 25vh 25vh;
+  grid-gap: 10px;
+  background-color: darkgray;
+}
+.board-square {
+  height: 100%;
+  width: 100%;
+  background-color: lightgoldenrodyellow;
+  font-family: 'Syncopate', sans-serif;
+  line-height: 22vh;
+  font-size: 5rem;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+}
