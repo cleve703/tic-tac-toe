@@ -52,7 +52,10 @@ var gameBoard = (function() {
       (a3.marker === letter && b2.marker === letter && c1.marker === letter))
       {
         document.getElementById("message-board-message").innerHTML = `${currentTurn} wins!!!`
-        outcome = true
+        outcome = true;
+      } else if (step == 8 && outcome == false) {
+        document.getElementById("message-board-message").innerHTML = `It's a tie!!!`
+        outcome = true;
       }
     });
     return outcome;
@@ -105,8 +108,3 @@ const displayController = (function() {
   gameBoard.spaceList().forEach(element => addListener(element)) 
   
 })()
-
-// set current turn
-// update message board with current turn
-// event listener for avail squares with current turn arg
-// 

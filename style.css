@@ -11,11 +11,14 @@ body {
   grid-template-columns: 1fr;
   grid-template-rows: 5vh 10vh;
   background-color: darkorange;
+  border-radius: 5px;
 }
 .message-board {
   display: grid;
   align-content: center;
   justify-content: center;
+  border-radius: 5px;
+  margin: 5px;
 }
 #message-board-label {
   font-family: sans-serif;
