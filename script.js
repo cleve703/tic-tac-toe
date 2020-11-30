@@ -39,7 +39,7 @@ var gameBoard = (function() {
   }
 
   function boardButtons() {
-      spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn())} flowController.turnProcess() }, true));
+      spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn()); flowController.turnProcess() }}, true));
   };
 
   return {

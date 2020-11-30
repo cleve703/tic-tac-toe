@@ -9,7 +9,7 @@ body {
   margin: 5vh 25%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 5vh 10vh;
+  grid-template-rows: 5vh 10vh 5vh;
   background-color: darkorange;
   border-radius: 5px;
 }
@@ -28,6 +28,13 @@ body {
   font-size: xx-large;
   background-color: black;
   color: rgb(0,222,0);
+}
+#message-board-form ul{
+  list-style-type: none;
+}
+#message-board-form li{
+  float: left;
+  margin: 0 5px;
 }
 .board-container {
   margin: 5vh 25%;
