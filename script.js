@@ -39,7 +39,7 @@ var gameBoard = (function() {
   }
 
   function boardButtons() {
-      spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn()); flowController.turnProcess() }}, true));
+      spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn().marker); flowController.turnProcess() }}, true));
   };
 
   return {
@@ -89,11 +89,11 @@ const flowController = (function() {
   
   function whoseTurn() {
     if (step % 2 == 0) {
-      currentTurn = "X";
+      currentTurn = playerXobj;
     } else {
-      currentTurn = "O";
+      currentTurn = playerOobj;
     }
-    displayController.display(`Your Turn, ${currentTurn}`)
+    displayController.display(`Your Turn, ${currentTurn.name}`)
     return currentTurn;
   };
 
@@ -119,7 +119,7 @@ const flowController = (function() {
       (a1.marker === letter && b2.marker === letter && c3.marker === letter) ||
       (a3.marker === letter && b2.marker === letter && c1.marker === letter))
       {
-        displayController.display(`${currentTurn} wins`)
+        displayController.display(`${currentTurn.name} wins`)
         outcome = true;
       } else if (step == 8 && outcome == false) {
         displayController.display(`It's a tie`)
