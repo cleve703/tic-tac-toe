@@ -50,8 +50,20 @@ var gameBoard = (function() {
 
 })();
 
+const player = ({marker, name}) => ({
+  marker,
+  name
+});
+
 const displayController = (function() {
   
+  function display(msg) {
+    document.getElementById("message-board-message").innerHTML = `${msg}`
+  };
+
+  return {
+    display
+  };
 })();
 
 const flowController = (function() {
@@ -81,7 +93,7 @@ const flowController = (function() {
     } else {
       currentTurn = "O";
     }
-    document.getElementById("message-board-message").innerHTML = `Your Turn, ${currentTurn}`
+    displayController.display(`Your Turn, ${currentTurn}`)
     return currentTurn;
   };
 
@@ -107,16 +119,40 @@ const flowController = (function() {
       (a1.marker === letter && b2.marker === letter && c3.marker === letter) ||
       (a3.marker === letter && b2.marker === letter && c1.marker === letter))
       {
-        document.getElementById("message-board-message").innerHTML = `${currentTurn} wins`
+        displayController.display(`${currentTurn} wins`)
         outcome = true;
       } else if (step == 8 && outcome == false) {
-        document.getElementById("message-board-message").innerHTML = `It's a tie`
+        displayController.display(`It's a tie`)
         outcome = true;
       }
     });
     return outcome;
   }
   
+  const buttonX = document.getElementById('saveX');
+  const buttonO = document.getElementById('saveO');
+  var playerXfield = document.getElementById('playerX').value;
+  var playerOfield = document.getElementById('playerO').value;
+
+  function saveName(marker, name) {
+    if (marker == 'X') {
+      playerX = player({marker, name});
+    } else if (marker == 'O') {
+    playerO = player({marker, name});
+    }
+  };
+
+  function disableNameButtons() {
+
+  }
+
+  function getNames() {
+    displayController.display(`Enter player names`)
+    buttonX.addEventListener('click', function(){saveName('X', playerXfield)});
+    buttonO.addEventListener('click', function(){saveName('O', playerOfield)});
+  };
+
+  getNames()
   gameBoard.boardUpdate(); 
   whoseTurn();  
   gameBoard.boardButtons();
@@ -124,7 +160,8 @@ const flowController = (function() {
   return {
     turnProcess,
     whoseTurn,
-    isGameOver
+    isGameOver,
+    getNames
   }
 
 })();

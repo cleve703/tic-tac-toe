@@ -17,10 +17,14 @@
     <div class="message-board" id="message-board-message"></div>
     <div class="message-board" id="message-board-form">
       <ul>
-        <li><input type="text" name="name" id="playerX" value="value" size="10"/></li>
-        <li><input type="text" name="name" id="playerO" value="value" size="10"/></li>
-        <li><button>Save Names</button></li>
-        <li><button>Reset Game</button></li>
+        <li>X's Name:<input type="text" name="name" id="playerX" value="value" size="15"/><button id="saveX">Save</button><span id="xName"></span></li>
+        <li>O's Name:<input type="text" name="name" id="playerO" value="value" size="15"/><button id="saveO">Save</button><span id="yName"></span></li>
+      </ul>
+    </div>
+    <div class="message-board" id="message-board-buttons">
+      <ul>
+        <li><button id="reset-board">Reset Board</button></li>
+        <li><button id="clear-names">Clear Names</button></li>
       </ul>
     </div>
   </div>
