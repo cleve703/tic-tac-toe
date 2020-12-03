@@ -50,9 +50,9 @@ var gameBoard = (function() {
 
 })();
 
-const player = ({marker, name}) => ({
+const createPlayer = ({marker, name}) => ({
   marker,
-  name
+  name,
 });
 
 const displayController = (function() {
@@ -129,34 +129,48 @@ const flowController = (function() {
     return outcome;
   }
   
-  const buttonX = document.getElementById('saveX');
-  const buttonO = document.getElementById('saveO');
+  var buttonX = document.getElementById('saveX');
+  var buttonO = document.getElementById('saveO');
   var playerXfield = document.getElementById('playerX').value;
   var playerOfield = document.getElementById('playerO').value;
+  var callbackX = saveName('X', playerXfield);
+  var callbackO = saveName('O', playerOfield);
+  var playerXobj = "";
+  var playerOobj = "";
 
   function saveName(marker, name) {
-    if (marker == 'X') {
-      playerX = player({marker, name});
-    } else if (marker == 'O') {
-    playerO = player({marker, name});
-    }
+    return function() {
+      if (marker == 'X') {
+        playerXobj = createPlayer({marker, name});
+        buttonX.removeEventListener('click', callbackX);
+        buttonX.disabled = true;
+        document.getElementById('playerX').disabled = true
+      } else if (marker == 'O') {
+        playerOobj = createPlayer({marker, name});
+        buttonO.removeEventListener('click', callbackO);
+        buttonO.disabled = true;
+        document.getElementById('playerO').disabled = true
+      };
+      if (playerXobj != "" && playerOobj != "") {
+        gameSequence();
+      }
+    };
   };
-
-  function disableNameButtons() {
-
-  }
 
   function getNames() {
     displayController.display(`Enter player names`)
-    buttonX.addEventListener('click', function(){saveName('X', playerXfield)});
-    buttonO.addEventListener('click', function(){saveName('O', playerOfield)});
+    buttonX.addEventListener('click', callbackX);
+    buttonO.addEventListener('click', callbackO);
   };
 
-  getNames()
-  gameBoard.boardUpdate(); 
-  whoseTurn();  
-  gameBoard.boardButtons();
-  
+  function gameSequence() {
+    gameBoard.boardUpdate(); 
+    whoseTurn();
+    gameBoard.boardButtons();  
+  }
+
+  getNames();
+
   return {
     turnProcess,
     whoseTurn,
