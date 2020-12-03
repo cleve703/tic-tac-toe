@@ -9,6 +9,8 @@ var gameBoard = (function() {
     }
   }
 
+  document.getElementById('reset-board').addEventListener('click', function() {resetBoard()});
+
   var a1 = new Space("a1", "");
   var a2 = new Space("a2", "");
   var a3 = new Space("a3", "");
@@ -27,6 +29,10 @@ var gameBoard = (function() {
     }
   }
 
+  const clearSpaces = () => {
+    spaces.forEach(space => space.assignMarker(""));
+  }
+
   function spaceList() {
     spacesArray = []
     spaces.forEach(space => spacesArray.push(space));
@@ -39,13 +45,20 @@ var gameBoard = (function() {
   }
 
   function boardButtons() {
-      spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn().marker); flowController.turnProcess() }}, true));
+    spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn().marker); flowController.turnProcess() }}, true));
   };
+
+  function resetBoard() {
+    clearSpaces();
+    boardUpdate();
+    console.log('resetting')
+  }
 
   return {
     spaceList,
     boardUpdate,
-    boardButtons
+    boardButtons,
+    resetBoard
   };
 
 })();
@@ -68,13 +81,19 @@ const displayController = (function() {
 
 const flowController = (function() {
   var gameOver = false;
-  var step = 0;
+
+  function step() {
+    count = 0;
+    gameBoard.spaceList().forEach(item => {
+      if (item.marker != "") {count++}
+    });
+    return count;
+  }
   
   function turnProcess() {
     if (gameOver == false) { gameBoard.boardUpdate(); }
     if (checkWin() == true) {gameOver = true};
     if (gameOver == false) {
-      nextTurn();
       whoseTurn();
     }
   }
@@ -82,13 +101,9 @@ const flowController = (function() {
   function isGameOver() {
     if (gameOver == false) {return false} else {return true}
   }
-
-  function nextTurn() {
-    step++;
-  }
   
   function whoseTurn() {
-    if (step % 2 == 0) {
+    if (step() % 2 == 0) {
       currentTurn = playerXobj;
     } else {
       currentTurn = playerOobj;
@@ -121,7 +136,7 @@ const flowController = (function() {
       {
         displayController.display(`${currentTurn.name} wins`)
         outcome = true;
-      } else if (step == 8 && outcome == false) {
+      } else if (step() == 9 && outcome == false) {
         displayController.display(`It's a tie`)
         outcome = true;
       }
@@ -135,8 +150,9 @@ const flowController = (function() {
   var playerOfield = document.getElementById('playerO').value;
   var callbackX = saveName('X', playerXfield);
   var callbackO = saveName('O', playerOfield);
-  var playerXobj = "";
-  var playerOobj = "";
+  document.getElementById('reset-board').addEventListener('click', function() {
+    getNames()
+  });
 
   function saveName(marker, name) {
     return function() {
@@ -144,12 +160,12 @@ const flowController = (function() {
         playerXobj = createPlayer({marker, name});
         buttonX.removeEventListener('click', callbackX);
         buttonX.disabled = true;
-        document.getElementById('playerX').disabled = true
+        document.getElementById('playerX').disabled = true;
       } else if (marker == 'O') {
         playerOobj = createPlayer({marker, name});
         buttonO.removeEventListener('click', callbackO);
         buttonO.disabled = true;
-        document.getElementById('playerO').disabled = true
+        document.getElementById('playerO').disabled = true;
       };
       if (playerXobj != "" && playerOobj != "") {
         gameSequence();
@@ -158,9 +174,16 @@ const flowController = (function() {
   };
 
   function getNames() {
+    playerXobj = null;
+    playerOobj = null;
     displayController.display(`Enter player names`)
+    document.getElementById('playerX').disabled = false;
+    document.getElementById('playerO').disabled = false;
+    buttonX.disabled = false;
+    buttonO.disabled = false;
     buttonX.addEventListener('click', callbackX);
     buttonO.addEventListener('click', callbackO);
+    gameOver = false;
   };
 
   function gameSequence() {
