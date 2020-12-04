@@ -10,6 +10,8 @@ var gameBoard = (function() {
   }
 
   document.getElementById('reset-board').addEventListener('click', function() {resetBoard()});
+  document.getElementById('clear-names').addEventListener('click', function() {clearNames()});
+  
 
   var a1 = new Space("a1", "");
   var a2 = new Space("a2", "");
@@ -52,6 +54,11 @@ var gameBoard = (function() {
     clearSpaces();
     boardUpdate();
     console.log('resetting')
+  }
+
+  function clearNames() {
+    document.getElementById('playerX').value="";
+    document.getElementById('playerO').value="";
   }
 
   return {
@@ -154,6 +161,10 @@ const flowController = (function() {
     getNames()
   });
 
+  function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
   function saveName(marker, name) {
     return function() {
       if (marker == 'X') {
@@ -167,7 +178,7 @@ const flowController = (function() {
         buttonO.disabled = true;
         document.getElementById('playerO').disabled = true;
       };
-      if (playerXobj != "" && playerOobj != "") {
+      if (isEmpty(playerXobj.name) && isEmpty(playerOobj.name)) {
         gameSequence();
       }
     };
@@ -189,10 +200,10 @@ const flowController = (function() {
   function gameSequence() {
     gameBoard.boardUpdate(); 
     whoseTurn();
-    gameBoard.boardButtons();  
   }
-
+  
   getNames();
+  gameBoard.boardButtons();  
 
   return {
     turnProcess,
