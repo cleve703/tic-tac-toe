@@ -72,6 +72,15 @@ const displayController = (() => {
     document.getElementById('save-names').disabled = true;
   }
 
+  function toggleFieldsOn() {
+    document.getElementById('playerX').disabled = false;
+    document.getElementById('playerO').disabled = false;
+    document.getElementById('xName').innerHTML = "";
+    document.getElementById('oName').innerHTML = "";
+    document.getElementById('save-names').disabled = false;
+    document.getElementById('save-names').innerHTML = "Save Names";
+  }
+
   function toggleSavePlay() {
     document.getElementById('save-names').disabled = false;
     document.getElementById('save-names').innerHTML = "Play";
@@ -80,7 +89,8 @@ const displayController = (() => {
   return {
     displayMessage,
     toggleFieldsOff,
-    toggleSavePlay
+    toggleSavePlay,
+    toggleFieldsOn
   }
 
 })();
@@ -108,7 +118,8 @@ const flowController = (() => {
   );
 
   let clearNames = function(ev) {
-    console.log(ev);
+    displayController.toggleFieldsOn();
+    displayController.displayMessage("Enter Players' Names.")
   };
 
   let resetBoard = function() {
@@ -148,11 +159,22 @@ const flowController = (() => {
     else {return false}
   }
 
+  function checkTie() {
+    let count = 0;
+    let bdArray = []
+    gameBoard.getBoard().forEach(element => bdArray.push(element.marker));
+    if (bdArray.filter(element => element === "X" || element === "O").length == 9) {return true} 
+    else {return false}
+  };
+  
+
   function nextTurn() {
     var currentName;
     if (checkWin()) {
       currentTurnX ? currentName = playerX.name : currentName = playerO.name
       displayController.displayMessage(`${currentName} WON!!! Press Reset.`)
+    } else if (checkTie()) {
+      displayController.displayMessage(`It's a TIE!!! Press Reset.`)
     } else {
       currentTurnX = !currentTurnX
       currentTurnX ? currentName = playerX.name : currentName = playerO.name
