@@ -70,6 +70,7 @@ const displayController = (() => {
     document.getElementById('xName').innerHTML = xName;
     document.getElementById('oName').innerHTML = oName;
     document.getElementById('save-names').disabled = true;
+    document.getElementById('clear-names').disabled = true;
   }
 
   function toggleFieldsOn() {
@@ -79,6 +80,10 @@ const displayController = (() => {
     document.getElementById('oName').innerHTML = "";
     document.getElementById('save-names').disabled = false;
     document.getElementById('save-names').innerHTML = "Save Names";
+  }
+  
+  function toggleClearNamesOn() {
+    document.getElementById('clear-names').disabled = false;
   }
 
   function toggleSavePlay() {
@@ -90,7 +95,8 @@ const displayController = (() => {
     displayMessage,
     toggleFieldsOff,
     toggleSavePlay,
-    toggleFieldsOn
+    toggleFieldsOn,
+    toggleClearNamesOn
   }
 
 })();
@@ -126,6 +132,7 @@ const flowController = (() => {
     gameBoard.clearBoard();
     currentTurnX = false;
     displayController.toggleSavePlay()
+    displayController.toggleClearNamesOn()
     displayController.displayMessage("Press Play or Clear Names")
   };
 
@@ -154,6 +161,7 @@ const flowController = (() => {
     else if (bdArray[6] == checkingVar && bdArray[7] == checkingVar && bdArray[8] == checkingVar) {return true}
     else if (bdArray[0] == checkingVar && bdArray[3] == checkingVar && bdArray[6] == checkingVar) {return true}
     else if (bdArray[1] == checkingVar && bdArray[4] == checkingVar && bdArray[7] == checkingVar) {return true}
+    else if (bdArray[2] == checkingVar && bdArray[5] == checkingVar && bdArray[8] == checkingVar) {return true}
     else if (bdArray[0] == checkingVar && bdArray[4] == checkingVar && bdArray[8] == checkingVar) {return true}
     else if (bdArray[2] == checkingVar && bdArray[4] == checkingVar && bdArray[6] == checkingVar) {return true}
     else {return false}
