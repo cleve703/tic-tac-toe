@@ -3,8 +3,8 @@ body {
   background-color: lightgoldenrodyellow;
 }
 @font-face {
-  font-family: "digital";
-  src: url("./DIGITALDREAMSKEWNARROW.ttf")
+  font-family: "Astronaut";
+  src: url("./ASTRONAU.TTF")
 }
 button {
   background-color: lightgray;
@@ -56,8 +56,8 @@ input {
   grid-column: 1 / 2;
 }
 #message-board-message {
-  font-family: "digital";
-  font-size: large;
+  font-family: "Astronaut";
+  font-size: xx-large;
   color: rgb(0,222,0);
   margin: 5px;
 }
