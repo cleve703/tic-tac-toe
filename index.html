@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap" rel="stylesheet"> 
-  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap" rel="stylesheet"> 
-  <title>CodingCop's Tic-Tac-Toe</title>
-</head>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
 <body>
   <div class="message-board-container">
     <div class="message-board" id="message-board-label">
@@ -17,8 +15,13 @@
     <div class="message-board" id="message-board-message"></div>
     <div class="message-board" id="message-board-form">
       <ul>
-        <li>X's Name:<input class="name-field" type="text" name="name" id="playerX" value="" size="15"/><button id="saveX">Save</button><span id="xName"></span></li>
-        <li>O's Name:<input class="name-field" type="text" name="name" id="playerO" value="" size="15"/><button id="saveO">Save</button><span id="yName"></span></li>
+        <li>X's Name:<input class="name-field" type="text" name="name" id="playerX" value="" size="15"/><span id="xName"></span></li>
+        <li>O's Name:<input class="name-field" type="text" name="name" id="playerO" value="" size="15"/><span id="yName"></span></li>
+      </ul>
+    </div>
+    <div class="message-board" id="message-board-save">
+      <ul>
+        <li><button id="save-names">Save Names</button></li>
       </ul>
     </div>
     <div class="message-board" id="message-board-buttons">
@@ -29,17 +32,16 @@
     </div>
   </div>
   <div class="board-container">
-    <div class="board-square" id="a1"></div>
-    <div class="board-square" id="a2"></div>
-    <div class="board-square" id="a3"></div>
-    <div class="board-square" id="b1"></div>
-    <div class="board-square" id="b2"></div>
-    <div class="board-square" id="b3"></div>
-    <div class="board-square" id="c1"></div>
-    <div class="board-square" id="c2"></div>
-    <div class="board-square" id="c3"></div>
+    <div class="board-square" id="0"></div>
+    <div class="board-square" id="1"></div>
+    <div class="board-square" id="2"></div>
+    <div class="board-square" id="3"></div>
+    <div class="board-square" id="4"></div>
+    <div class="board-square" id="5"></div>
+    <div class="board-square" id="6"></div>
+    <div class="board-square" id="7"></div>
+    <div class="board-square" id="8"></div>
   </div>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

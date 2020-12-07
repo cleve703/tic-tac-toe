@@ -1,7 +1,8 @@
-var gameBoard = (function() {
+const gameBoard = (() => {
   class Space {
     constructor(grid, marker) {
       this.grid = grid;
+      this.htmlElement = document.getElementById(`${grid}`)
       this.marker = marker;
     }
     assignMarker(marker) {
@@ -9,207 +10,124 @@ var gameBoard = (function() {
     }
   }
 
-  document.getElementById('reset-board').addEventListener('click', function() {resetBoard()});
-  document.getElementById('clear-names').addEventListener('click', function() {clearNames()});
-  
+  var boardArray = []
 
-  var a1 = new Space("a1", "");
-  var a2 = new Space("a2", "");
-  var a3 = new Space("a3", "");
-  var b1 = new Space("b1", "");
-  var b2 = new Space("b2", "");
-  var b3 = new Space("b3", "");
-  var c1 = new Space("c1", "");
-  var c2 = new Space("c2", "");
-  var c3 = new Space("c3", "");
-
-  var spaces = [a1, a2, a3, b1, b2, b3, c1, c2, c3];
-
-  const placement = (grid, marker) => {
-    if (flowController.isGameOver() == false) {
-      eval(grid).assignMarker(marker);
+  function buildBoard(num) {
+    for (x = 0; x < num; x++) {
+      boardArray.push(new Space(x, ""));
     }
+    return boardArray;
   }
 
-  const clearSpaces = () => {
-    spaces.forEach(space => space.assignMarker(""));
+  let placement = function(ev) {
+    boardArray[ev.target.id].assignMarker(flowController.whoseTurn());
+    updateHTML(boardArray[ev.target.id].htmlElement, boardArray[ev.target.id].marker);
+    this.removeEventListener('click', placement);
+    flowController.nextTurn();
   }
 
-  function spaceList() {
-    spacesArray = []
-    spaces.forEach(space => spacesArray.push(space));
-    console.log(spacesArray)
-    return spacesArray
+  function boardListenersAdd(ary=boardArray) {
+    ary.forEach(element => element.htmlElement.addEventListener('click', placement))
   }
 
-  function boardUpdate() {
-    return spaces.forEach(space => document.getElementById(space.grid).innerHTML = space.marker);
+  function boardListenersRemove(ary) {
+    ary.forEach(element => element.htmlElement.removeEventListener('click', placement))
+  }
+  
+  function clearBoard() {
+    boardArray.forEach (element => element.assignMarker(""));
+    boardArray.forEach (element => updateHTML(element.htmlElement, ""));
+    boardListenersRemove(boardArray);
   }
 
-  function boardButtons() {
-    spaces.forEach(space => document.getElementById(space.grid).addEventListener('click', function() { if (space.marker == "") {placement(space.grid, flowController.whoseTurn().marker); flowController.turnProcess() }}, true));
-  };
-
-  function resetBoard() {
-    clearSpaces();
-    boardUpdate();
-    console.log('resetting')
+  function getBoard() {
+    return boardArray
   }
 
-  function clearNames() {
-    document.getElementById('playerX').value="";
-    document.getElementById('playerO').value="";
+  function updateHTML(grid, marker) {
+    document.getElementById(`${grid.id}`).innerHTML = marker
   }
 
   return {
-    spaceList,
-    boardUpdate,
-    boardButtons,
-    resetBoard
+    buildBoard,
+    getBoard,
+    clearBoard,
+    boardListenersAdd
   };
 
 })();
 
-const createPlayer = ({marker, name}) => ({
-  marker,
-  name,
-});
+const displayController = (() => {
+  var msg = "";
 
-const displayController = (function() {
-  
-  function display(msg) {
-    document.getElementById("message-board-message").innerHTML = `${msg}`
-  };
+  function displayMessage(msg) {
+    document.getElementById('message-board-message').innerHTML = msg
+  }
 
   return {
-    display
-  };
+    displayMessage
+  }
+
 })();
 
-const flowController = (function() {
-  var gameOver = false;
+const flowController = (() => {
+  var currentTurnX = true;
+  var currentTurn;
+  
+  const playerFactory = (name, marker) => {
+    return {name, marker}
+  }
 
-  function step() {
-    count = 0;
-    gameBoard.spaceList().forEach(item => {
-      if (item.marker != "") {count++}
-    });
-    return count;
-  }
-  
-  function turnProcess() {
-    if (gameOver == false) { gameBoard.boardUpdate(); }
-    if (checkWin() == true) {gameOver = true};
-    if (gameOver == false) {
-      whoseTurn();
+  var playerX = playerFactory("X", "X")
+  var playerO = playerFactory("O", "O")
+
+  let saveNames = (function(ev) {
+    var validNames = false;
+    var xName = document.getElementById('playerX');
+    var oName = document.getElementById('playerO');
+    xName !== "" ? playerX.name = xName : playerX.name = "X";
+    oName !== "" ? playerO.name = oName : playerO.name = "O";
+    gameBoard.boardListenersAdd()
     }
+  );
+
+  let clearNames = function(ev) {
+    console.log(ev);
+  };
+
+  let resetBoard = function() {
+    gameBoard.clearBoard();
+    currentTurnX = true;
+  };
+
+  function addMessageBoardListners() {
+    document.getElementById('save-names').addEventListener('click', saveNames)
+    document.getElementById('reset-board').addEventListener('click', resetBoard)
+    document.getElementById('clear-names').addEventListener('click', clearNames)
   }
-  
-  function isGameOver() {
-    if (gameOver == false) {return false} else {return true}
-  }
+
+  (function preGame() {
+    displayController.displayMessage(`Enter Players' Names.`);
+    addMessageBoardListners();
+  })()
   
   function whoseTurn() {
-    if (step() % 2 == 0) {
-      currentTurn = playerXobj;
-    } else {
-      currentTurn = playerOobj;
-    }
-    displayController.display(`Your Turn, ${currentTurn.name}`)
+    currentTurnX ? currentTurn = "X" : currentTurn = "O";
     return currentTurn;
-  };
-
-  function checkWin() {
-    const letters = ["X", "O"];
-    var outcome = false;
-    var a1 = gameBoard.spaceList()[0];
-    var a2 = gameBoard.spaceList()[1];
-    var a3 = gameBoard.spaceList()[2];
-    var b1 = gameBoard.spaceList()[3];
-    var b2 = gameBoard.spaceList()[4];
-    var b3 = gameBoard.spaceList()[5];
-    var c1 = gameBoard.spaceList()[6];
-    var c2 = gameBoard.spaceList()[7];
-    var c3 = gameBoard.spaceList()[8];
-    letters.forEach(letter => {
-      if ((a1.marker === letter && a2.marker === letter && a3.marker === letter)  || 
-      (b1.marker === letter && b2.marker === letter && b3.marker === letter) ||
-      (c1.marker === letter && c2.marker === letter && c3.marker === letter) ||
-      (a1.marker === letter && b1.marker === letter && c1.marker === letter) ||
-      (a2.marker === letter && b2.marker === letter && c2.marker === letter) ||
-      (a3.marker === letter && b3.marker === letter && c3.marker === letter) ||
-      (a1.marker === letter && b2.marker === letter && c3.marker === letter) ||
-      (a3.marker === letter && b2.marker === letter && c1.marker === letter))
-      {
-        displayController.display(`${currentTurn.name} wins`)
-        outcome = true;
-      } else if (step() == 9 && outcome == false) {
-        displayController.display(`It's a tie`)
-        outcome = true;
-      }
-    });
-    return outcome;
   }
   
-  var buttonX = document.getElementById('saveX');
-  var buttonO = document.getElementById('saveO');
-  var playerXfield = document.getElementById('playerX').value;
-  var playerOfield = document.getElementById('playerO').value;
-  var callbackX = saveName('X', playerXfield);
-  var callbackO = saveName('O', playerOfield);
-  document.getElementById('reset-board').addEventListener('click', function() {
-    getNames()
-  });
-
-  function isEmpty(str) {
-    return (!str || 0 === str.length);
-}
-
-  function saveName(marker, name) {
-    return function() {
-      if (marker == 'X') {
-        playerXobj = createPlayer({marker, name});
-        buttonX.removeEventListener('click', callbackX);
-        buttonX.disabled = true;
-        document.getElementById('playerX').disabled = true;
-      } else if (marker == 'O') {
-        playerOobj = createPlayer({marker, name});
-        buttonO.removeEventListener('click', callbackO);
-        buttonO.disabled = true;
-        document.getElementById('playerO').disabled = true;
-      };
-      if (isEmpty(playerXobj.name) && isEmpty(playerOobj.name)) {
-        gameSequence();
-      }
-    };
-  };
-
-  function getNames() {
-    playerXobj = null;
-    playerOobj = null;
-    displayController.display(`Enter player names`)
-    document.getElementById('playerX').disabled = false;
-    document.getElementById('playerO').disabled = false;
-    buttonX.disabled = false;
-    buttonO.disabled = false;
-    buttonX.addEventListener('click', callbackX);
-    buttonO.addEventListener('click', callbackO);
-    gameOver = false;
-  };
-
-  function gameSequence() {
-    gameBoard.boardUpdate(); 
-    whoseTurn();
+  function nextTurn() {
+    currentTurnX = !currentTurnX
   }
-  
-  getNames();
-  gameBoard.boardButtons();  
+
 
   return {
-    turnProcess,
     whoseTurn,
-    isGameOver,
-    getNames
+    nextTurn
   }
-
 })();
+
+
+
+
+board = gameBoard.buildBoard(9);
