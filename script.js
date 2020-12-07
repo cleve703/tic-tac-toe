@@ -64,14 +64,29 @@ const displayController = (() => {
     document.getElementById('message-board-message').innerHTML = msg
   }
 
+  function toggleFieldsOff(xName, oName) {
+    document.getElementById('playerX').disabled = true;
+    document.getElementById('playerO').disabled = true;
+    document.getElementById('xName').innerHTML = xName;
+    document.getElementById('oName').innerHTML = oName;
+    document.getElementById('save-names').disabled = true;
+  }
+
+  function toggleSavePlay() {
+    document.getElementById('save-names').disabled = false;
+    document.getElementById('save-names').innerHTML = "Play";
+  }
+
   return {
-    displayMessage
+    displayMessage,
+    toggleFieldsOff,
+    toggleSavePlay
   }
 
 })();
 
 const flowController = (() => {
-  var currentTurnX = true;
+  var currentTurnX = false;
   var currentTurn;
   
   const playerFactory = (name, marker) => {
@@ -82,12 +97,13 @@ const flowController = (() => {
   var playerO = playerFactory("O", "O")
 
   let saveNames = (function(ev) {
-    var validNames = false;
-    var xName = document.getElementById('playerX');
-    var oName = document.getElementById('playerO');
-    xName !== "" ? playerX.name = xName : playerX.name = "X";
-    oName !== "" ? playerO.name = oName : playerO.name = "O";
+    var xName = document.getElementById('playerX').value;
+    var oName = document.getElementById('playerO').value;
+    xName.name !== "" ? playerX.name = xName : playerX.name = "X";
+    oName.name !== "" ? playerO.name = oName : playerO.name = "O";
     gameBoard.boardListenersAdd()
+    displayController.toggleFieldsOff(xName, oName)
+    nextTurn()
     }
   );
 
@@ -97,7 +113,9 @@ const flowController = (() => {
 
   let resetBoard = function() {
     gameBoard.clearBoard();
-    currentTurnX = true;
+    currentTurnX = false;
+    displayController.toggleSavePlay()
+    displayController.displayMessage("Press Play or Clear Names")
   };
 
   function addMessageBoardListners() {
@@ -116,8 +134,30 @@ const flowController = (() => {
     return currentTurn;
   }
   
+  function checkWin() {
+    let checkingVar = whoseTurn();
+    let bdArray = [];
+    gameBoard.getBoard().forEach(element => bdArray.push(element.marker));
+    if (bdArray[0] == checkingVar && bdArray[1] == checkingVar && bdArray[2] == checkingVar) {return true}
+    else if (bdArray[3] == checkingVar && bdArray[4] == checkingVar && bdArray[5] == checkingVar) {return true}
+    else if (bdArray[6] == checkingVar && bdArray[7] == checkingVar && bdArray[8] == checkingVar) {return true}
+    else if (bdArray[0] == checkingVar && bdArray[3] == checkingVar && bdArray[6] == checkingVar) {return true}
+    else if (bdArray[1] == checkingVar && bdArray[4] == checkingVar && bdArray[7] == checkingVar) {return true}
+    else if (bdArray[0] == checkingVar && bdArray[4] == checkingVar && bdArray[8] == checkingVar) {return true}
+    else if (bdArray[2] == checkingVar && bdArray[4] == checkingVar && bdArray[6] == checkingVar) {return true}
+    else {return false}
+  }
+
   function nextTurn() {
-    currentTurnX = !currentTurnX
+    var currentName;
+    if (checkWin()) {
+      currentTurnX ? currentName = playerX.name : currentName = playerO.name
+      displayController.displayMessage(`${currentName} WON!!! Press Reset.`)
+    } else {
+      currentTurnX = !currentTurnX
+      currentTurnX ? currentName = playerX.name : currentName = playerO.name
+      displayController.displayMessage(`Your turn, ${currentName}`)
+    }
   }
 
 

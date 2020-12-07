@@ -2,8 +2,8 @@ body {
   background-color: lightgoldenrodyellow;
 }
 @font-face {
-  font-family: "LCD14";
-  src: url("./DSEG14Classic-Regular.ttf")
+  font-family: "digital";
+  src: url("./DIGITALDREAMSKEWNARROW.ttf")
 }
 button {
   background-color: lightgray;
@@ -31,14 +31,14 @@ input {
   align-content: center;
   justify-content: center;
   border-radius: 5px;
-  /* margin: 5px; */
+  margin: 0 5px;
 }
 #message-board-label {
   font-family: sans-serif;
   font-size: large;
 }
 #message-board-message {
-  font-family: "LCD14";
+  font-family: "digital";
   font-size: xx-large;
   background-color: black;
   color: rgb(0,222,0);
@@ -70,7 +70,7 @@ input {
   margin: 5vh 5%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 20vh 20vh 20vh;
+  grid-template-rows: 15vh 15vh 15vh;
   grid-gap: 10px;
   background-color: darkgray;
 }
@@ -79,7 +79,7 @@ input {
   width: 100%;
   background-color: lightgoldenrodyellow;
   font-family: 'Cedarville Cursive', cursive;
-  line-height: 22vh;
+  line-height: 15vh;
   font-size: 5rem;
   display: grid;
   align-content: center;
