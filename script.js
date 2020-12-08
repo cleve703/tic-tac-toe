@@ -30,7 +30,7 @@ const gameBoard = (() => {
     ary.forEach(element => element.htmlElement.addEventListener('click', placement))
   }
 
-  function boardListenersRemove(ary) {
+  function boardListenersRemove(ary=boardArray) {
     ary.forEach(element => element.htmlElement.removeEventListener('click', placement))
   }
   
@@ -52,7 +52,8 @@ const gameBoard = (() => {
     buildBoard,
     getBoard,
     clearBoard,
-    boardListenersAdd
+    boardListenersAdd,
+    boardListenersRemove
   };
 
 })();
@@ -181,6 +182,7 @@ const flowController = (() => {
     if (checkWin()) {
       currentTurnX ? currentName = playerX.name : currentName = playerO.name
       displayController.displayMessage(`${currentName} WON!!! Press Reset.`)
+      gameBoard.boardListenersRemove();
     } else if (checkTie()) {
       displayController.displayMessage(`It's a TIE!!! Press Reset.`)
     } else {
